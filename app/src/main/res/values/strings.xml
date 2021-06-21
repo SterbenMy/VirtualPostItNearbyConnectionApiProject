@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Virtual Post It</string>
+    <string name="error_missing_permissions">Cannot start without required permissions</string>
+
+    <string name="toast_connected">Connected to %s</string>
+    <string name="toast_disconnected">Disconnected from %s</string>
+
+    <string name="status_unknown">Start searching to connect to</string>
+    <string name="status_connected">Connected to : \n </string>
+    <string name="status_searching">Looking for a device to connect to</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+</resources>
