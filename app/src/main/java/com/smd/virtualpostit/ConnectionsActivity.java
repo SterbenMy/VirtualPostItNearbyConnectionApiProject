@@ -344,20 +344,12 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
                         },
                         discoveryOptions.build())
                 .addOnSuccessListener(
-                        new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unusedResult) {
-                                onDiscoveryStarted();
-                            }
-                        })
+                        unusedResult -> onDiscoveryStarted())
                 .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                mIsDiscovering = false;
-                                logW("startDiscovering() failed.", e);
-                                onDiscoveryFailed();
-                            }
+                        e -> {
+                            mIsDiscovering = false;
+                            logW("startDiscovering() failed.", e);
+                            onDiscoveryFailed();
                         });
     }
 
@@ -463,8 +455,8 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
         logD(String.format("connectedToEndpoint(endpoint=%s)", endpoint));
         mEstablishedConnections.put(endpoint.getId(), endpoint);
         onEndpointConnected(endpoint);
-        txtConnected = findViewById(R.id.current_state);
-        txtConnected.setText("Connected to : \n"+getConnectedEndpoints().toString());
+//        txtConnected = findViewById(R.id.current_state);
+//        txtConnected.setText("Connected to : \n"+getConnectedEndpoints().toString());
        // stopAdvertising();
     }
 
@@ -528,12 +520,7 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
         mConnectionsClient
                 .sendPayload(new ArrayList<>(endpoints), payload)
                 .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                logW("sendPayload() failed.", e);
-                            }
-                        });
+                        e -> logW("sendPayload() failed.", e));
     }
 
     /**
