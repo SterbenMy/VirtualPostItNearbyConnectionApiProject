@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Virtual Post It</string>
+    <string name="app_name">Virtual Post-it</string>
+    <string name="welcome">Welcome\nto</string>
     <string name="error_missing_permissions">Cannot start without required permissions</string>
 
     <string name="toast_connected">Connected to %s</string>
@@ -8,6 +9,9 @@
     <string name="status_unknown">Start searching to connect to</string>
     <string name="status_connected">Connected to : \n </string>
     <string name="status_searching">Looking for a device to connect to</string>
-    <string name="start">Start</string>
-    <string name="stop">Stop</string>
+    <string name="start">Start Virtual Post-it</string>
+    <string name="stop">Stop Virtual Post-it</string>
+    <string name="camera">Post a photo</string>
+    <string name="view_images">View photos</string>
+    <string name="main_background">View photos</string>
 </resources>
