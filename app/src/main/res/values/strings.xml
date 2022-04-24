@@ -14,4 +14,12 @@
     <string name="camera">Post a photo</string>
     <string name="view_images">View photos</string>
     <string name="main_background">View photos</string>
+    <string name="btnBack">Back</string>
+    <string name="hintName">Write your post name</string>
+    <string name="hintComment">Write your post comment</string>
+    <string name="postImageDescription">select an image</string>
+    <string name="btnReset">Reset</string>
+    <string name="btnPost">Post</string>
+    <string name="name">Name</string>
+    <string name="comment">comment</string>
 </resources>
