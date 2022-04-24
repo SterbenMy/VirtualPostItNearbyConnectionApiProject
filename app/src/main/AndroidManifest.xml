@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Required for recording audio -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- For shake-to-advertise -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -14,17 +15,20 @@
         android:name="android.hardware.sensor.accelerometer"
         android:required="true" />
     <uses-feature
-        android:name="android.hardware.camera"
+        android:name="android.hardware.camera2"
         android:required="true" />
 
     <application
-        android:name="android.support.multidex.MultiDexApplication"
+        android:name="androidx.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".ViewMyImagesActivity"
+            android:exported="false" />
         <activity
             android:name=".ViewImagesActivity"
             android:exported="false" />
@@ -33,10 +37,11 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity android:name=".SplashActivity" android:theme="@style/AppSplash">
+            android:screenOrientation="fullSensor"></activity>
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/AppSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,7 +52,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>
