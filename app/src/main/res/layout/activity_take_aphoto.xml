@@ -1,35 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TakeAPhotoActivity">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="333dp"
-        android:layout_height="47dp"
-        android:text="Button"
-        tools:layout_editor_absoluteX="39dp"
-        tools:layout_editor_absoluteY="640dp" />
+    <ImageView
+        android:id="@+id/viewImageBackground2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/main_background"
+        android:foreground="@drawable/foreground_design"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextTextPersonName"
-        android:layout_width="352dp"
-        android:layout_height="56dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="394dp" />
+    <ImageButton
+        android:id="@+id/btnBack1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/left"
+        android:contentDescription="@string/btnBack"
+        app:layout_constraintBottom_toBottomOf="@+id/viewImageBackground2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias=".02"
+        app:tint="#FFFFFF" />
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="351dp"
-        android:layout_height="349dp"
-        app:srcCompat="@android:drawable/ic_menu_mapmode"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="22dp" />
+        android:id="@+id/postImage"
+        android:layout_width="370dp"
+        android:layout_height="350dp"
+        android:background="@drawable/image_view_style"
+        android:src="@drawable/select_image"
+        android:contentDescription="@string/postImageDescription"
 
-</android.support.constraint.ConstraintLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias=".25" />
+
+    <EditText
+        android:id="@+id/postName"
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/hintName"
+        android:inputType="text"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColor"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/postImage"
+        app:layout_constraintVertical_bias=".1"/>
+
+    <EditText
+        android:id="@+id/postComment"
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/hintComment"
+        android:inputType="text"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColor"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/postName"
+        app:layout_constraintVertical_bias=".15"/>
+
+    <Button
+        android:id="@+id/btnReset"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="@string/btnReset"
+        android:background="@drawable/button_style"
+        android:textColor="@color/textColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnPost"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/postComment"/>
+
+    <Button
+        android:id="@+id/btnPost"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="@string/btnPost"
+        android:background="@drawable/button_style"
+        android:textColor="@color/textColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnReset"
+        app:layout_constraintTop_toBottomOf="@id/postComment"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
