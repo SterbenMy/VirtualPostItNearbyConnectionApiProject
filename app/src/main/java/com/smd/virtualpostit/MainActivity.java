@@ -10,8 +10,8 @@ import android.Manifest;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.ColorInt;
+
 import android.text.SpannableString;
 import android.text.format.DateFormat;
 import android.text.method.ScrollingMovementMethod;
@@ -25,7 +25,6 @@ import com.google.android.gms.nearby.connection.ConnectionInfo;
 import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.Strategy;
 
-import java.util.Objects;
 import java.util.Random;
 
 public class MainActivity extends ConnectionsActivity {
@@ -80,14 +79,14 @@ public class MainActivity extends ConnectionsActivity {
 
         Button btnCamera = findViewById(R.id.btnCamera);
         btnCamera.setOnClickListener(view -> {
-            Intent intent = new Intent(this, ViewImagesActivity.class);
+            Intent intent = new Intent(this, TakeAPhotoActivity.class);
             startActivity(intent);
         });
 
         Button btnViewImages = findViewById(R.id.btnViewImages);
         btnViewImages.setOnClickListener(view ->
         {
-            Intent intent = new Intent(this, ViewImagesActivity.class);
+            Intent intent = new Intent(this, ViewMyImagesActivity.class);
             startActivity(intent);
         });
     }

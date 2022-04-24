@@ -1,6 +1,6 @@
 package com.smd.virtualpostit;
 
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 
 public class Constants {
 
@@ -22,4 +22,5 @@ public class Constants {
                     0xFFFF9800 /* orange */,
                     0xFF795548 /* brown */
             };
+    public static final int CAMERA_INTENT = 51;
 }
