@@ -24,7 +24,7 @@
         android:id="@+id/btnBack1"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/left"
         android:contentDescription="@string/btnBack"
         app:layout_constraintBottom_toBottomOf="@+id/viewImageBackground"
@@ -33,42 +33,43 @@
         app:layout_constraintVertical_bias=".02"
         app:tint="#FFFFFF" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="376dp"
-        android:layout_height="402dp"
-        app:srcCompat="@android:drawable/ic_menu_gallery"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="152dp" />
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/slideviewpager"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="374dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="19dp"
-        android:layout_marginBottom="52dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/viewImageBackground"
-        app:layout_constraintEnd_toEndOf="@+id/viewImageBackground"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/viewImageBackground" />
+    </androidx.viewpager.widget.ViewPager>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="375dp"
-        android:layout_height="21dp"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="18dp"
-        tools:layout_editor_absoluteY="587dp" />
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/slideviewpager">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="374dp"
-        android:layout_height="40dp"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="18dp"
-        tools:layout_editor_absoluteY="101dp" />
+        <Button
+            android:id="@+id/previous"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="150dp"
+            android:layout_height="match_parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/next"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="150dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

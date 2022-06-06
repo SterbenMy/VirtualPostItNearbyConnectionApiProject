@@ -5,14 +5,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.provider.Settings;
 
-import com.smd.virtualpostit.DataModel.PostDAO;
-import com.smd.virtualpostit.DataModel.PostDatabase;
+import com.smd.virtualpostit.DataModel.Post;
+import com.smd.virtualpostit.DatabaseConf.DBHelper;
+
+import java.util.List;
 
 public class ViewMyImagesActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    PostDAO postDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +22,14 @@ public class ViewMyImagesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_my_images);
 
         recyclerView = findViewById(R.id.postRecyclerView);
+        String[] deviceId = new String[]{ Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID) };
+        DBHelper dbHelper = new DBHelper(this);
+        List<Post> posts = dbHelper.getAllImgMine(deviceId);
 
-        postDAO = PostDatabase.getDBInstance(this).postDAO();
-
-        PostRecycler postRecycler = new PostRecycler(postDAO.getAllPosts());
-
+        PostRecycler postRecycler = new PostRecycler(posts, ViewMyImagesActivity.this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(postRecycler);
     }
+
+
 }

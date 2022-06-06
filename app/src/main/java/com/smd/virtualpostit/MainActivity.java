@@ -1,16 +1,15 @@
 package com.smd.virtualpostit;
 
 
-import static com.smd.virtualpostit.Constants.COLORS;
-import static com.smd.virtualpostit.Constants.SERVICE_ID;
-
-
 import android.Manifest;
 
 import android.content.Intent;
 
 import android.os.Bundle;
-import androidx.annotation.ColorInt;
+import android.os.Handler;
+import android.provider.Settings;
+import android.text.format.DateUtils;
+import android.util.Log;
 
 import android.text.SpannableString;
 import android.text.format.DateFormat;
@@ -21,24 +20,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.nearby.connection.ConnectionInfo;
-import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.Strategy;
+import com.smd.virtualpostit.DataModel.Post;
+import com.smd.virtualpostit.DatabaseConf.DBHelper;
 
-import java.util.Random;
+import java.io.File;
+import java.security.spec.ECField;
+import java.util.*;
+
+import static com.smd.virtualpostit.Constants.*;
 
 public class MainActivity extends ConnectionsActivity {
 
-    /**
-     * A running log of debug messages. Only visible when DEBUG=true.
-     */
     private TextView mDebugLogView;
 
     private static final Strategy STRATEGY = Strategy.P2P_STAR;
-
-    /**
-     * A running log of debug messages. Only visible when DEBUG=true.
-     */
     public static final boolean DEBUG = true;
 
     private State mState = State.UNKNOWN;
@@ -48,9 +44,11 @@ public class MainActivity extends ConnectionsActivity {
     private int startStopFlag = 0;
 
     private Button btnStart;
-
-    @ColorInt
-    public int mConnectedColor = COLORS[0];
+    private Button btnCamera;
+    private Button btnViewImages;
+    private Button btnViewMyImages;
+    private Thread deleteDataThread;
+    private boolean isRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +61,9 @@ public class MainActivity extends ConnectionsActivity {
 
         mName = generateRandomName();
 
+        deleteDataThread = null;
+        isRunning = false;
+
         btnStart = findViewById(R.id.btnStart);
         btnStart.setOnClickListener(view ->
         {
@@ -70,23 +71,52 @@ public class MainActivity extends ConnectionsActivity {
                 btnStart.setText(R.string.stop);
                 setState(State.SEARCHING);
                 startStopFlag = 1;
-            }else{
+                deleteDataThread = new Thread(() -> {
+                    isRunning = true;
+                    while (isRunning) {
+                        try {
+//                            Thread.sleep(30 * 60 * 1000);
+                            deleteExpiredData();
+                            Thread.sleep(5 * 60 * 1000);
+                        } catch (InterruptedException e) {
+                            Log.d(TAG, "caught exception  InterruptedException (thread)");
+                        }
+                    }
+                });
+                deleteDataThread.start();
+            } else {
+                isRunning = false;
+                if (deleteDataThread != null) {
+                    try {
+                        deleteDataThread.interrupt();
+                    } catch (Exception e) {
+                        Log.d(TAG, "caught exception  on interrupt (thread)");
+                    }
+                }
                 btnStart.setText(R.string.start);
                 setState(State.UNKNOWN);
                 startStopFlag = 0;
+
             }
         });
 
-        Button btnCamera = findViewById(R.id.btnCamera);
+        btnCamera = findViewById(R.id.btnCamera);
         btnCamera.setOnClickListener(view -> {
             Intent intent = new Intent(this, TakeAPhotoActivity.class);
             startActivity(intent);
         });
 
-        Button btnViewImages = findViewById(R.id.btnViewImages);
+        btnViewImages = findViewById(R.id.btnViewImages);
         btnViewImages.setOnClickListener(view ->
         {
             Intent intent = new Intent(this, ViewMyImagesActivity.class);
+            startActivity(intent);
+        });
+
+        btnViewMyImages = findViewById(R.id.btnViewMyImages);
+        btnViewMyImages.setOnClickListener(view ->
+        {
+            Intent intent = new Intent(this, ViewImagesActivity.class);
             startActivity(intent);
         });
     }
@@ -108,46 +138,46 @@ public class MainActivity extends ConnectionsActivity {
     }
 
     @Override
-    protected void onEndpointDiscovered(Endpoint endpoint) {
-        // We found an advertiser!
-        stopDiscovering();
-        connectToEndpoint(endpoint);
-    }
-
-    @Override
-    protected void onConnectionInitiated(Endpoint endpoint, ConnectionInfo connectionInfo) {
-        // A connection to another device has been initiated! We'll use the auth token, which is the
-        // same on both devices, to pick a color to use when we're connected. This way, users can
-        // visually see which device they connected with.
-        mConnectedColor = COLORS[connectionInfo.getAuthenticationToken().hashCode() % COLORS.length];
-
-        // We accept the connection immediately.
-        acceptConnection(endpoint);
-    }
-
-    @Override
     protected void onEndpointConnected(Endpoint endpoint) {
-        Toast.makeText(
-                this, getString(R.string.toast_connected, endpoint.getName()), Toast.LENGTH_SHORT)
-                .show();
+        Log.d(TAG, "onEndPointConnected ---- connected to " + endpoint);
+        Toast.makeText(this, getString(R.string.toast_connected, endpoint.getName()), Toast.LENGTH_SHORT).show();
         setState(State.CONNECTED);
     }
 
     @Override
     protected void onEndpointDisconnected(Endpoint endpoint) {
-        Toast.makeText(
-                this, getString(R.string.toast_disconnected, endpoint.getName()), Toast.LENGTH_SHORT)
-                .show();
+        Log.d(TAG, "onEndpointDisconnected ---- endpointDisconnected");
+        Toast.makeText(this, getString(R.string.toast_disconnected, endpoint.getName()), Toast.LENGTH_SHORT).show();
         setState(State.SEARCHING);
     }
 
     @Override
     protected void onConnectionFailed(Endpoint endpoint) {
-        // Let's try someone else.
+        Log.d(TAG, "onConnectionFailed ---- connection failed " + endpoint);
         if (getState() == State.SEARCHING) {
             startDiscovering();
             startAdvertising();
         }
+    }
+
+    @Override
+    protected void onDiscoveryStarted() {
+        Log.d(TAG, "Discovery started");
+    }
+
+    @Override
+    protected void onDiscoveryFailed() {
+        Log.d(TAG, "Discovery failed");
+    }
+
+    @Override
+    protected void onAdvertisingFailed() {
+        Log.d(TAG, "Advertising failed");
+    }
+
+    @Override
+    protected void onAdvertisingStarted() {
+        Log.d(TAG, "Advertising started");
     }
 
     private void setState(State state) {
@@ -163,7 +193,6 @@ public class MainActivity extends ConnectionsActivity {
     }
 
     private void onStateChanged(State newState) {
-
         switch (newState) {
             case SEARCHING:
                 disconnectFromAllEndpoints();
@@ -172,7 +201,7 @@ public class MainActivity extends ConnectionsActivity {
                 break;
             case CONNECTED:
                 stopDiscovering();
-//                stopAdvertising();
+                stopAdvertising();
                 break;
             case UNKNOWN:
                 stopAllEndpoints();
@@ -182,18 +211,35 @@ public class MainActivity extends ConnectionsActivity {
         }
     }
 
-    @Override
-    protected void onReceive(Endpoint endpoint, Payload payload) {
-        // onReceive imaginea
+    private void deleteExpiredData() {
+        DBHelper dbHelper = new DBHelper(this);
+        String[] date = new String[]{(addHoursToJavaUtilDate(new Date(), -24)).toString()};
+        List<Post> posts = dbHelper.getAllExpiredPosts(date);
+        if (posts.size() > 0) {
+            for (Post post : posts) {
+                String imageNamePath = post.getImagePath() + "/" + post.getImageText();
+                File imgFile = new File(imageNamePath);
+                boolean deleted = imgFile.delete();
+                dbHelper.deletePostById(post.getUid());
+                Log.d(TAG, "Was deleted " + post.toString());
+            }
+        }
     }
 
+    public Date addHoursToJavaUtilDate(Date date, int hours) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        return calendar.getTime();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     protected String[] getRequiredPermissions() {
         return join(
                 super.getRequiredPermissions(),
                 Manifest.permission.READ_EXTERNAL_STORAGE);
     }
-
 
     private static String[] join(String[] a, String... b) {
         String[] join = new String[a.length + b.length];
@@ -259,16 +305,16 @@ public class MainActivity extends ConnectionsActivity {
         return spannable;
     }
 
+    private State getState() {
+        return mState;
+    }
+
     private static String generateRandomName() {
         String name = "";
         Random random = new Random();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 9; i++) {
             name += random.nextInt(10);
         }
         return name;
-    }
-
-    private State getState() {
-        return mState;
     }
 }

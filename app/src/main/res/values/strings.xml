@@ -11,15 +11,18 @@
     <string name="status_searching">Looking for a device to connect to</string>
     <string name="start">Start Virtual Post-it</string>
     <string name="stop">Stop Virtual Post-it</string>
-    <string name="camera">Post a photo</string>
-    <string name="view_images">View photos</string>
-    <string name="main_background">View photos</string>
+    <string name="camera">Make a post</string>
+    <string name="view_images">View post</string>
+    <string name="view_my_images">View my posts</string>
+    <string name="main_background">View posts</string>
     <string name="btnBack">Back</string>
     <string name="hintName">Write your post name</string>
     <string name="hintComment">Write your post comment</string>
     <string name="postImageDescription">select an image</string>
     <string name="btnReset">Reset</string>
     <string name="btnPost">Post</string>
-    <string name="name">Name</string>
+    <string name="name"><b>Name</b></string>
     <string name="comment">comment</string>
+    <string name="removePhoto">Remove this post</string>
+    <string name="description"><b>Description</b></string>
 </resources>

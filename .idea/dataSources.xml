@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="VirtualPostIt" uuid="1ad0fd02-ca5c-4ab8-a1ba-06f753513f77">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\SterbenMy\AppData\Local\JetBrains\IntelliJIdea2022.1\device-explorer\xiaomi-2107113sg-803534e7\data\data\com.smd.virtualpostit\databases\VirtualPostIt.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="VirtualPostIt [2]" uuid="d19573d8-a1c0-4d69-a2cc-668c52334162">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\SterbenMy\AppData\Local\JetBrains\IntelliJIdea2022.1\device-explorer\huawei-ane_lx1-89U4C18628001625\data\data\com.smd.virtualpostit\databases\VirtualPostIt.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.36.0.3/sqlite-jdbc-3.36.0.3.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+  </component>
+</project>
