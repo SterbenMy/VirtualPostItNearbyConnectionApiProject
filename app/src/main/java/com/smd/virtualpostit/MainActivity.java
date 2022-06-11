@@ -3,8 +3,18 @@ package com.smd.virtualpostit;
 
 import android.Manifest;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -30,6 +40,10 @@ import java.util.*;
 
 import static com.smd.virtualpostit.Constants.*;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 public class MainActivity extends ConnectionsActivity {
 
     private TextView mDebugLogView;
@@ -43,27 +57,40 @@ public class MainActivity extends ConnectionsActivity {
 
     private int startStopFlag = 0;
 
+    NotificationManagerCompat notificationManagerCompat;
+    Notification notification;
     private Button btnStart;
     private Button btnCamera;
     private Button btnViewImages;
     private Button btnViewMyImages;
     private Thread deleteDataThread;
     private boolean isRunning;
+    LocationManager locationManager;
+    int PERMISSION_ID = 44;
+    private String[] deviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("myCh", "My channerl", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+
         mDebugLogView = findViewById(R.id.debug_log);
         mDebugLogView.setVisibility(DEBUG ? View.VISIBLE : View.GONE);
         mDebugLogView.setMovementMethod(new ScrollingMovementMethod());
 
+        deviceId = new String[]{Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID)};
         mName = generateRandomName();
-
+        createNotification();
         deleteDataThread = null;
         isRunning = false;
-
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         btnStart = findViewById(R.id.btnStart);
         btnStart.setOnClickListener(view ->
         {
@@ -71,11 +98,15 @@ public class MainActivity extends ConnectionsActivity {
                 btnStart.setText(R.string.stop);
                 setState(State.SEARCHING);
                 startStopFlag = 1;
+
+
                 deleteDataThread = new Thread(() -> {
                     isRunning = true;
                     while (isRunning) {
                         try {
-//                            Thread.sleep(30 * 60 * 1000);
+                            if (getPostByLocation().size() != 0) {
+//                                push();
+                            }
                             deleteExpiredData();
                             Thread.sleep(5 * 60 * 1000);
                         } catch (InterruptedException e) {
@@ -98,6 +129,8 @@ public class MainActivity extends ConnectionsActivity {
                 startStopFlag = 0;
 
             }
+
+
         });
 
         btnCamera = findViewById(R.id.btnCamera);
@@ -119,6 +152,19 @@ public class MainActivity extends ConnectionsActivity {
             Intent intent = new Intent(this, ViewImagesActivity.class);
             startActivity(intent);
         });
+
+        if (!isLocationEnabled()) {
+            Log.d(TAG, "Required to turn on location");
+            Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("My notification id", "My Notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
     }
 
     @Override
@@ -316,5 +362,96 @@ public class MainActivity extends ConnectionsActivity {
             name += random.nextInt(10);
         }
         return name;
+    }
+
+    private void createNotification() {
+        String message = "You have a few new posts";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "myCh")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Virtual Post-it notification")
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        notification = builder.build();
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+
+        builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+    }
+
+    public void push() {
+        notificationManagerCompat.notify(1, notification);
+    }
+
+    private List<Post> getPostByLocation() {
+        DBHelper dbHelper = new DBHelper(this);
+        List<Post> posts = dbHelper.getAllImgExceptMine(deviceId);
+        List<Post> postList = new ArrayList<>();
+        for (Post post : posts) {
+            if (checkDistanceBetween(post.getLat(), post.getLon())) {
+                postList.add(post);
+            }
+        }
+
+        return postList;
+    }
+
+    public double lat;
+    public double lon;
+
+    private boolean checkDistanceBetween(Double startLat, Double startLog) {
+        Location locationStart = new Location("Location A");
+        Location locationEnd = new Location("Location B");
+
+        locationStart.setLatitude(startLat);
+        locationStart.setLongitude(startLog);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            if (isLocationEnabled()) {
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Location locationNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                Location locationPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+                if (location != null) {
+                    lat = location.getLatitude();
+                    lon = location.getLongitude();
+                } else if (locationNetwork != null) {
+                    lat = locationNetwork.getLatitude();
+                    lon = locationNetwork.getLongitude();
+                } else if (locationPassive != null) {
+                    lon = locationPassive.getLongitude();
+                    lat = locationPassive.getLatitude();
+                }
+
+            } else {
+                Log.d(TAG, "Required to turn on location");
+                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        } else {
+            Log.d(TAG, "Required permissions");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_ID);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
+        }
+
+
+        locationEnd.setLatitude(lat);
+        locationEnd.setLongitude(lon);
+        double distance = locationStart.distanceTo(locationEnd);
+
+
+        if (distance >= 0 && distance <= 1000) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Log.d(TAG, "Check isLocationEnabled");
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 }

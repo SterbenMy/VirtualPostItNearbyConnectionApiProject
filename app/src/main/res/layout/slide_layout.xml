@@ -7,59 +7,54 @@
     <ImageView
         android:id="@+id/imageViewSliderImage"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_height="510dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/labelName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-    </ImageView>
+        app:layout_constraintStart_toStartOf="parent"/>
     <TextView
         android:id="@+id/labelName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:textSize="22sp"
         android:text="@string/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewSliderImage">
-    </TextView>
+        app:layout_constraintTop_toBottomOf="@+id/imageViewSliderImage" />
     <TextView
         android:id="@+id/textName"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/labelName">
-    </TextView>
-
+        app:layout_constraintTop_toBottomOf="@+id/labelName"/>
     <TextView
         android:id="@+id/labelDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:textSize="22sp"
         android:text="@string/description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textName">
-    </TextView>
+        app:layout_constraintTop_toBottomOf="@+id/textName"/>
     <TextView
         android:id="@+id/textDescription"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_height="100dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/labelDescription">
-
-    </TextView>
+        app:layout_constraintTop_toBottomOf="@+id/labelDescription"
+        app:layout_constraintVertical_bias=".1"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

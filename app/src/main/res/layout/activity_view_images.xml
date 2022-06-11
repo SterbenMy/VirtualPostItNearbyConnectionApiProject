@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/main_background"
-        android:foreground="@drawable/foreground_design"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,8 +21,8 @@
 
     <ImageButton
         android:id="@+id/btnBack1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginStart="10dp"
         android:background="@drawable/left"
         android:contentDescription="@string/btnBack"
@@ -36,7 +35,7 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/slideviewpager"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="650dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +46,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
-        android:layout_height="70dp"
+        android:layout_height="40dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,14 +57,13 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="150dp"
             android:layout_height="match_parent" />
-
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
-
         <Button
             android:id="@+id/next"
+            android:text="@string/next"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="150dp"
             android:layout_height="match_parent" />

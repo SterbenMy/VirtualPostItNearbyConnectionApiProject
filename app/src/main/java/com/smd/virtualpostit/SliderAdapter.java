@@ -3,6 +3,7 @@ package com.smd.virtualpostit;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class SliderAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == (ConstraintLayout) object;
+        return view == object;
     }
 
     @Override
@@ -47,9 +48,9 @@ public class SliderAdapter extends PagerAdapter {
         File imgFile = new File(imageNamePath);
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.slide_layout, container, false);
-        ImageView slideImageView = (ImageView) view.findViewById(R.id.imageViewSliderImage);
-        TextView slideHeading = (TextView) view.findViewById(R.id.textName);
-        TextView slideDescription = (TextView) view.findViewById(R.id.textDescription);
+        ImageView slideImageView = view.findViewById(R.id.imageViewSliderImage);
+        TextView slideHeading = view.findViewById(R.id.textName);
+        TextView slideDescription = view.findViewById(R.id.textDescription);
 
         myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
         slideImageView.setImageBitmap(myBitmap);

@@ -25,4 +25,6 @@
     <string name="comment">comment</string>
     <string name="removePhoto">Remove this post</string>
     <string name="description"><b>Description</b></string>
+    <string name="next"><b>Next</b></string>
+    <string name="previous"><b>Previous</b></string>
 </resources>
